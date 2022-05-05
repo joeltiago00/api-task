@@ -1,11 +1,12 @@
 import User from "../../models/User.js";
+import bcrypt from "bcrypt";
 
 const store = async (user) => {
     const model = await User.create({
         first_name: user.firstName,
         last_name: user.lastName,
         email: user.email,
-        password: user.password
+        password: await bcrypt.hash(user.password, 10)
     });
 
     return model;
@@ -30,8 +31,12 @@ const getUserById = async(id) => {
     return user;
 }
 
+const getUserByEmail = async (email) => {
+    return await User.findOne({email: email}).exec();
+}
+
 const UserRepository = {
-    store, update, getUserById
+    store, update, getUserById, getUserByEmail
 }
 export default UserRepository;
 

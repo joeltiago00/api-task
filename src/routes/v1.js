@@ -1,5 +1,7 @@
 import express from "express";
 import UserController from "../app/controllers/UserController.js";
+import LoginController from "../app/controllers/auth/LoginController.js";
+import LogoutController from "../app/controllers/auth/LogoutController.js";
 import UserRequest from "../app/requests/UserRequest.js";
 
 export const router = express.Router();
@@ -32,3 +34,11 @@ router.post("/user/:user_id", async (req, res) => {
 
   const id = await UserController.update(req, res, req.params.user_id);
 });
+
+router.post("/login", async (req, res) => {
+    LoginController.login(req, res);
+});
+
+router.get('/logout', async (req, res) => {
+    LogoutController.logout(req, res);
+})
