@@ -1,0 +1,32 @@
+pipelines:
+  custom:
+    Deploy Production:
+      - step:
+          name: Deploy PROD 🚀
+          deployment: production
+          image: node:14.5.0-alpine
+          caches:
+            - node
+          script:
+            - mv .cd/production.yml serverless.yml
+            - npm install -g serverless@2.35.0
+            - serverless config credentials --stage prod --provider aws --key ${MY_AWS_ACCESS_KEY_ID} --secret ${MY_AWS_SECRET_ACCESS_KEY}
+            - npm install serverless-dotenv-plugin
+            - npm install dotenv
+            - npm install serverless-http
+            - serverless deploy --stage prod
+    Deploy Homologation:
+      - step:
+          name: Deploy HOM 🚀
+          deployment: staging
+          image: node:14.5.0-alpine
+          caches:
+            - node
+          script:
+            - mv .cd/homologation.yml serverless.yml
+            - npm install -g serverless@2.35.0
+            - serverless config credentials --stage hom --provider aws --key ${MY_AWS_ACCESS_KEY_ID} --secret ${MY_AWS_SECRET_ACCESS_KEY}
+            - npm install serverless-dotenv-plugin
+            - npm install dotenv
+            - npm install serverless-http
+            - serverless deploy --stage hom

@@ -1,0 +1,87 @@
+service: pif-app-simma
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:*
+        - s3:*
+        - ses:*
+      Resource: "*"
+  vpc:
+    securityGroupIds:
+      - sg-060065324d993329a
+    subnetIds:
+      - subnet-0572c93202ab367d3
+      - subnet-08a4138e4efef3c83
+  stage: prod
+  region: sa-east-1
+  timeout: 900
+  memorySize: 2048
+  package:
+    excludeDevDependencies: true
+    exclude:
+      - .git/**
+      - .docker/**
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_DATABASE: ${env:DB_DATABASE}
+    DB_USERNAME: ${env:DB_USERNAME}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_PORT: ${env:DB_PORT}
+    DB_CONNECT_MONGODB: ${env:DB_CONNECT_MONGODB}
+
+    MY_AWS_REGION: ${env:MY_AWS_REGION}
+    MY_AWS_ACCESS_KEY_ID: ${env:MY_AWS_ACCESS_KEY_ID}
+    MY_AWS_SECRET_ACCESS_KEY: ${env:MY_AWS_SECRET_ACCESS_KEY}
+
+    MY_AWS_SES_ACCESS_KEY_ID: ${env:MY_AWS_SES_ACCESS_KEY_ID}
+    MY_AWS_SES_SECRET_ACCESS_KEY: ${env:MY_AWS_SES_SECRET_ACCESS_KEY}
+    MY_AWS_SES_EMAIL_DEFAULT: ${env:MY_AWS_SES_EMAIL_DEFAULT}
+    MY_AWS_SES_REGION: ${env:MY_AWS_SES_REGION}
+
+    MY_AWS_BUCKET_PHOTOS: ${env:MY_AWS_BUCKET_PHOTOS}
+    MY_AWS_BUCKET_PHOTOS_LINK: ${env:MY_AWS_BUCKET_PHOTOS_LINK}
+
+    API_CHOSEN: ${env:API_CHOSEN}
+    APP_ENV: ${env:APP_ENV}
+
+functions:
+  emails:
+    handler: src/server.run
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+      - schedule: "rate(1 hour)"
+  revelations:
+    handler: src/console/revelations.run
+    events:
+      - http:
+          path: /cron-revelations
+          method: ANY
+          cors: true
+      - schedule: "rate(5 hours)"
+  reportHistoryEmail:
+    handler: src/console/reportHistoryEmail.run
+    events:
+      - http:
+          path: /cron-report-history-email
+          method: ANY
+          cors: true
+      # - schedule: "rate(2 minutes)"
+      - schedule: "cron(25 14 ? * MON *)"
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-offline-scheduler
