@@ -7,7 +7,7 @@ const login = async (req, res) => {
 
     const user = await UserRepository.getUserByEmail(email);
 
-    if (!user) 
+    if (Object.keys(user).length === 0) 
         res.status(422).json({error: "Invalid credentials."});
 
     if (!attempt(password, user.password))
@@ -33,8 +33,6 @@ const attempt = async (password, user_password) => {
     return await bcrypt.compare(password, user_password);
 }
 
-const LoginController = {
+export default {
     login
-}
-
-export default LoginController;
+};

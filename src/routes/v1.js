@@ -2,43 +2,18 @@ import express from "express";
 import UserController from "../app/controllers/UserController.js";
 import LoginController from "../app/controllers/auth/LoginController.js";
 import LogoutController from "../app/controllers/auth/LogoutController.js";
-import UserRequest from "../app/requests/UserRequest.js";
+import AuthMiddleware from "../app/middlewares/Authenticate.js";
 
 export const router = express.Router();
 
 router.post("/", async (req, res) => {
-  UserRequest.store(req)
-  return
-
-  const id = await UserController.update(req);
-
-  res.status(201).json({
-    _id: id,
-  });
+  res.status(200).json({message: "API IS ON!!!"})
 });
 
-router.post("/user", async (req, res) => {
-  const id = await UserController.store(req);
+router.post("/user", UserController.store);
 
-  res.status(201).json({
-    _id: id,
-  });
-});
+router.post("/user/:user_id", AuthMiddleware, UserController.update);
 
-router.post("/user/:user_id", async (req, res) => {
-  if (!req.params.user_id) {
-    res.status(422).json({
-      error: "User ID is missing."
-    })
-  }
+router.post("/login", LoginController.login);
 
-  const id = await UserController.update(req, res, req.params.user_id);
-});
-
-router.post("/login", async (req, res) => {
-    LoginController.login(req, res);
-});
-
-router.get('/logout', async (req, res) => {
-    LogoutController.logout(req, res);
-})
+router.get('/logout', AuthMiddleware, LogoutController.logout);

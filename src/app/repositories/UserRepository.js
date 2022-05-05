@@ -20,15 +20,7 @@ const update = async (user, data) => {
 }
 
 const getUserById = async(id) => {
-    const user = await User.findById(id);
-
-    if (user === null || user === undefined) {
-        console.log("Fail to get user");
-
-        return;
-    }
-    
-    return user;
+    return await User.findById(id).exec();
 }
 
 const getUserByEmail = async (email) => {

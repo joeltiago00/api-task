@@ -41,7 +41,7 @@ const expireSessionsByUserId = async (user_id, current_session_id) => {
 }
 
 const getValidSessionByUUID = async (uuid) => {
-    return await Session.find({uuid: uuid, status: 'active', expired_at: {$gte: new Date()}}).exec();
+    return await Session.findOne({uuid: uuid, status: 'active', expired_at: {$gte: new Date()}}).exec();
 }
 
 const expireSessionByUUID = async (uuid, session) => {
@@ -55,8 +55,17 @@ const expireSessionByUUID = async (uuid, session) => {
         });
 }
 
+const isValidByUUID = async (uuid) => {
+    const session = await Session.findOne({uuid: uuid, status: 'active', expired_at: {$gte: new Date()}}).exec();
+
+    if (Object.keys(session).length === 0)
+        return false;
+
+    return true;
+}
+
 const SessionRepository = {
-    store, update, getValidSessionByUUID, expireSessionByUUID
+    store, update, getValidSessionByUUID, expireSessionByUUID, isValidByUUID
 }
 export default SessionRepository;
 

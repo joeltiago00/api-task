@@ -5,18 +5,16 @@ const logout = async (req, res) => {
 
     const session = await SessionRepository.getValidSessionByUUID(auth_secure_token);
 
-    if (!session)
+    if (Object.keys(session).length === 0)
         res.status(200).json({message: "Logged out."});
 
     if (!await SessionRepository.expireSessionByUUID(auth_secure_token, session)){
-        res.setHeader('auth-secure-token', auth_secure_token)
         res.status(422).json({error: "Fail to logged out."});
-}
+    }
+    
     res.status(200).json({message: "Logged out."});
 }
 
-const LogoutController = {
+export default {
     logout
 }
-
-export default LogoutController;
