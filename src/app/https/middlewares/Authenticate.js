@@ -1,11 +1,11 @@
-import UserRepository from "../repositories/UserRepository.js";
-import SessionRepository from "../repositories/SessionRepository.js";
+import UserRepository from "../../repositories/UserRepository.js";
+import SessionRepository from "../../repositories/SessionRepository.js";
 
 export default async (req, res, next) => {
     const session = await SessionRepository.getValidSessionByUUID(req.headers['auth-secure-token']);
 
     if (Object.keys(session).length === 0)
-        res.status(422).json({error: "Invalid session."});
+        return res.status(422).json({error: "Invalid session."});
 
     const user = await UserRepository.getUserById(session.user_id);
 

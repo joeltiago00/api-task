@@ -1,8 +1,7 @@
-import dotenv from "dotenv"
+import database from "./config/database.js";
 import express from "express";
 import mongoose from "mongoose";
-import {router} from "./routes/v1.js";
-dotenv.config()
+import { router } from "./routes/v1.js";
 
 const app = express();
 const port = 3000;
@@ -15,11 +14,9 @@ app.use(express.json());
 
 app.use('/', router);
 
-mongoose.connect(process.env.DB_CONNECT_MONGODB)
+mongoose.connect(database.db_host)
 .then(() => {
     console.log("Connected at Database.");
     app.listen(port);
 })
-.catch((err) => {
-    console.log(err);
-});
+.catch((err) => { console.log(err); });
