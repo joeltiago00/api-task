@@ -1,24 +1,24 @@
 import yup from "yup";
-import general from "../../../resources/lang/pt-br/general.js";
+import validation from "../../../resources/lang/pt-br/validations.js";
 
 class UserRequest {
     async validateStore(req, res, next) {
         const validator = yup.object().shape({
-            first_name: yup.string(general.user.string_first_name)
-                .min(3, general.user.min_first_name)
-                .max(20, general.user.max_first_name)
-                .required(general.user.required_first_name),
-            last_name: yup.string(general.user.string_last_name)
-                .min(3, general.user.min_last_name)
-                .max(40, general.user.max_last_name)
-                .required(general.user.required_last_name),
-            email: yup.string(general.user.string_email)
-                .email(general.user.email)
-                .required(general.user.required_email),
-            password: yup.string(general.user.string_password)
-                .min(8, general.user.min_password)
-                .max(16, general.user.max_password)
-                .required(general.user.required_password)
+            first_name: yup.string(validation.user.string_first_name)
+                .min(3, validation.user.min_first_name)
+                .max(20, validation.user.max_first_name)
+                .required(validation.user.required_first_name),
+            last_name: yup.string(validation.user.string_last_name)
+                .min(3, validation.user.min_last_name)
+                .max(40, validation.user.max_last_name)
+                .required(validation.user.required_last_name),
+            email: yup.string(validation.user.string_email)
+                .email(validation.user.email)
+                .required(validation.user.required_email),
+            password: yup.string(validation.user.string_password)
+                .min(8, validation.user.min_password)
+                .max(16, validation.user.max_password)
+                .required(validation.user.required_password)
         });
 
         try {
@@ -34,12 +34,12 @@ class UserRequest {
 
     async validateUpdate(req, res, next) {
         const validator = yup.object().shape({
-            first_name: yup.string(general.user.string_first_name)
-                .min(3, general.user.min_first_name)
-                .max(20, general.user.max_first_name),
-            last_name: yup.string(general.user.string_last_name)
-                .min(3, general.user.min_last_name)
-                .max(40, general.user.max_last_name)
+            first_name: yup.string(validation.user.string_first_name)
+                .min(3, validation.user.min_first_name)
+                .max(20, validation.user.max_first_name),
+            last_name: yup.string(validation.user.string_last_name)
+                .min(3, validation.user.min_last_name)
+                .max(40, validation.user.max_last_name)
         });
 
         try {

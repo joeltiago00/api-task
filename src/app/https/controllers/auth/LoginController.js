@@ -10,16 +10,16 @@ class LoginController {
      * @returns { json }
      */
     async login(req, res) {
-        const { email, password} = req.body;
+        const { email, password } = req.body;
     
         const user = await UserRepository.getUserByEmail(email);
     
         if (Object.keys(user).length === 0) 
             return res.status(422).json({error: "Invalid credentials."});
-    
-        if (!attempt(password, user.password))
+
+        if (!await bcrypt.compare(password, user.password))
             return res.status(422).json({error: "Invalid credentials."});
-    
+            
         const session = await SessionRepository.store(user._id);
     
         return res.status(200).json({
@@ -36,12 +36,6 @@ class LoginController {
         })
     }
 
-    /**
-     * 
-     * @param { String } password 
-     * @param { String} user_password 
-     * @returns { Boolean }
-     */
     async attempt(password, user_password) {
         return await bcrypt.compare(password, user_password);
     }

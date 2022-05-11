@@ -4,8 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 class SessionRepository
 {
-    async store(user_id)
-    {
+    async store(user_id) {
         const model = await Session.create({
             user_id: user_id,
             uuid: uuidv4(),
@@ -17,22 +16,20 @@ class SessionRepository
             updated_at: new Date()
         });
     
-        if (!await expireSessionsByUserId(user_id, model._id))
+        if (!await this.expireSessionsByUserId(user_id, model._id))
             return;
     
         return model;
     }
     
-    async update(user, data)
-    {
+    async update(user, data) {
         return await user.updateOne({
             first_name: data.first_name ??user.first_name,
             last_name: data.last_name ?? user.last_name
         });
     }
     
-    async expireSessionsByUserId(user_id, current_session_id)
-    {
+    async expireSessionsByUserId(user_id, current_session_id) {
         return await Session.updateMany(
             {user_id: user_id, status: 'active', _id: {$ne: current_session_id}},
             {
@@ -44,13 +41,11 @@ class SessionRepository
              ).exec();
     }
     
-    async getValidSessionByUUID(uuid)
-    {
+    async getValidSessionByUUID(uuid) {
         return await Session.findOne({uuid: uuid, status: 'active', expired_at: {$gte: new Date()}}).exec();
     }
     
-    async expireSessionByUUID(uuid, session)
-    {
+    async expireSessionByUUID(uuid, session) {
         return await Session.updateOne(
             {uuid: uuid},
             {
@@ -61,8 +56,7 @@ class SessionRepository
             });
     }
     
-    async isValidByUUID(uuid)
-    {
+    async isValidByUUID(uuid) {
         const session = await Session.findOne({uuid: uuid, status: 'active', expired_at: {$gte: new Date()}}).exec();
     
         if (Object.keys(session).length === 0)

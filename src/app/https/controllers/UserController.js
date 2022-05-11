@@ -1,5 +1,7 @@
 import User from "./../../core/User.js";
 import UserRepository from "../../repositories/UserRepository.js";
+import general from "../../../resources/lang/pt-br/generals.js";
+import InvalidUser from "../../exceptions/user/InvalidUser.js";
 
 class UserControler {
     
@@ -28,8 +30,12 @@ class UserControler {
      * @returns { json }
      */
     async update(req, res) {
-        const {first_name, last_name} = req.body;
         const user_id = req.params.user_id ?? res.status(422).json({error: "User ID is missing."});
+
+        if (req.user._id !== user_id)
+            return res.status(422).json({error: "Not allowed."})
+
+        const {first_name, last_name} = req.body;
     
         const user = await UserRepository.getUserById(user_id);
     
@@ -42,9 +48,7 @@ class UserControler {
         })) 
         return res.status(422).json({error: "Fail to update user."});
     
-        return res.status(201).json({
-            _id: user._id,
-          });
+        return res.status(204).json({});
     }
 }
 

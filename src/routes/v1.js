@@ -19,7 +19,7 @@ router.get('/logout', await AuthMiddleware, await LogoutController.logout);
 
 //User Routes
 router.post("/user", await UserRequest.validateStore, await UserController.store);
-router.post("/user/:user_id", UserRequest.validateUpdate, await AuthMiddleware, await UserController.update);
+router.patch("/user/:user_id", UserRequest.validateUpdate, await AuthMiddleware, await UserController.update);
 
 //Task Routes
 router.post('/user/:user_id/task', await TaskRequest.store, await AuthMiddleware, await TaskController.store);
