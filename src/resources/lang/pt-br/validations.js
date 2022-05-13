@@ -30,5 +30,11 @@ export default {
         boolean_email_notify: "O campo email_notify deve ser booleano.",
         required_email_notify: "O campo email_notify é obrigatório.",
         integer_time_before_notify: "O campo time_before_notify deve ser um número inteiro.",
+    },
+    _id: {
+        required: "Id é obrigatório.",
+        min: "Id precisa ter no mínimo 24 caracteres.",
+        max: "Id precisa ter no máximo 25 caracteres.",
+        string: "Id precisa ser um texto.",
     }
 };

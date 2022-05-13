@@ -52,6 +52,25 @@ class UserRequest {
             
         await next();
     }
+
+    async validationShow(req, res, next) {
+        const validator = yup.object().shape({
+            user_id: yup.string(validation._id.string)
+            .min(24, validation._id.min)
+            .max(25, validation._id.max)
+            .required(validation._id.required)
+        });
+
+        try {
+            await validator.validate(req.params)
+        } catch (err) {
+            return res.status(422).json({
+                error: err.errors
+            })
+        }
+
+        await next();
+    }
 }
 
 export default new UserRequest();

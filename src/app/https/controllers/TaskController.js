@@ -1,5 +1,6 @@
 import TaskRepository from "../../repositories/TaskRepository.js";
 import Task from "../../core/Task.js";
+import generals from "../../../resources/lang/pt-br/generals.js";
 
 class TaskContoller
 {
@@ -18,7 +19,7 @@ class TaskContoller
         const model = await TaskRepository.store(task);
 
         if (!model)
-            res.status(422).json({error: "Fail to create task."});
+            res.status(422).json({error: generals.task.not_created});
     
         res.status(201).json({_id: model._id});
     }
@@ -34,7 +35,7 @@ class TaskContoller
         const task = await TaskRepository.getTaskById(req.params.task_id);
     
         if (!task)
-            res.status(422).json({error: "Invalid task."});
+            res.status(422).json({error: generals.task.invalid});
 
         if (!await TaskRepository.update(task, {
             title: title,
@@ -43,7 +44,7 @@ class TaskContoller
             email_notify: email_notify,
             time_before_notify: time_before_notify
         }))
-            return res.status(422).json({error: "Fail to update task."});
+            return res.status(422).json({error: generals.task.fail_to_update});
 
         return res.status(200).json({_id: task._id});
     }

@@ -7,8 +7,7 @@ class UserRepository {
      * @param { User } user 
      * @returns { User }
      */
-    async store(user) 
-    {
+    async store(user) {
         const model = await User.create({
             first_name: user.firstName,
             last_name: user.lastName,
@@ -25,8 +24,7 @@ class UserRepository {
      * @param { object } data 
      * @returns { User }
      */
-    async update(user, data)
-    {
+    async update(user, data) {
         return await user.updateOne({
             first_name: data.first_name ??user.first_name,
             last_name: data.last_name ?? user.last_name
@@ -38,8 +36,7 @@ class UserRepository {
      * @param { ObjectId } id 
      * @returns { User }
      */
-    async getUserById(id)
-    {
+    async getUserById(id) {
         return await User.findById(id).exec();
     }
     
@@ -48,10 +45,17 @@ class UserRepository {
      * @param { String } email 
      * @returns { User }
      */
-    async getUserByEmail(email)
-    {
+    async getUserByEmail(email) {
         return await User.findOne({email: email}).exec();
     }
+
+    /**
+     * 
+     * @returns { Collection }
+     */
+    async getAllUsers() {
+        return await User.find();
+    } 
 }
 
 
