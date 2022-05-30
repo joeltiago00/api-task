@@ -1,6 +1,7 @@
 import User from "./../../core/User.js";
 import UserRepository from "../../repositories/UserRepository.js";
 import generals from "../../../resources/lang/pt-br/generals.js";
+import JWTHelper from "../../helpers/JWTHelper.js";
 
 class UserControler {
     
