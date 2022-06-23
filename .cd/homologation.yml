@@ -1,4 +1,4 @@
-service: pif-app-simma
+service: api-task
 
 frameworkVersion: "2"
 
@@ -28,28 +28,7 @@ provider:
       - .git/**
       - .docker/**
   environment:
-    DB_HOST: ${env:DB_HOST}
-    DB_DATABASE: ${env:DB_DATABASE}
-    DB_USERNAME: ${env:DB_USERNAME}
-    DB_PASSWORD: ${env:DB_PASSWORD}
-    DB_PORT: ${env:DB_PORT}
-    DB_CONNECT_MONGODB: ${env:DB_CONNECT_MONGODB}
-
-    MY_AWS_REGION: ${env:MY_AWS_REGION}
-    MY_AWS_ACCESS_KEY_ID: ${env:MY_AWS_ACCESS_KEY_ID}
-    MY_AWS_SECRET_ACCESS_KEY: ${env:MY_AWS_SECRET_ACCESS_KEY}
-
-    MY_AWS_SES_ACCESS_KEY_ID: ${env:MY_AWS_SES_ACCESS_KEY_ID}
-    MY_AWS_SES_SECRET_ACCESS_KEY: ${env:MY_AWS_SES_SECRET_ACCESS_KEY}
-    MY_AWS_SES_EMAIL_DEFAULT: ${env:MY_AWS_SES_EMAIL_DEFAULT}
-    MY_AWS_SES_REGION: ${env:MY_AWS_SES_REGION}
-
-    MY_AWS_BUCKET_PHOTOS: ${env:MY_AWS_BUCKET_PHOTOS}
-    MY_AWS_BUCKET_PHOTOS_LINK: ${env:MY_AWS_BUCKET_PHOTOS_LINK}
-
-    API_CHOSEN: ${env:API_CHOSEN}
-    APP_ENV: ${env:APP_ENV}
-    EMAIL_FAKE: ${env:EMAIL_FAKE}
+# Adicionar variáveis de ambiente necessárias
 
 functions:
   emails:
@@ -64,19 +43,11 @@ functions:
           method: ANY
           cors: true
       # - schedule: "rate(15 minutes)"
-  revelations:
-    handler: src/console/revelations.run
+  reportEmail:
+    handler: src/console/reportEmail.run
     events:
       - http:
-          path: /cron-revelations
-          method: ANY
-          cors: true
-      # - schedule: "rate(15 minutes)"
-  reportHistoryEmail:
-    handler: src/console/reportHistoryEmail.run
-    events:
-      - http:
-          path: /cron-report-history-email
+          path: /cron-report-email
           method: ANY
           cors: true
       # - schedule: "rate(10 minutes)"
